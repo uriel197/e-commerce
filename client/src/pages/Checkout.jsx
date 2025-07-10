@@ -5,6 +5,7 @@ import { redirect } from "react-router-dom";
 
 export const loader = (store) => () => {
   const user = store.getState().userState.user;
+  // Loaders are not React components, so they cannot use React hooks like useSelector, instead, they directly interact with the Redux store using store.getState() to access state data.This is a non-React context, so the code relies on Redux's raw API.
 
   if (!user) {
     toast.error("You must be logged in to checkout");

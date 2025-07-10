@@ -92,41 +92,7 @@
   text-underline-offset: 5px;
 }
 
-/* 
- 
-============= 
-Navbar
-=============== 
-*/
-
-/* .nav-center {
-  width: var(--fluid-width);
-  max-width: var(--max-width);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.logo {
-  text-transform: none;
-  color: var(--white);
-  letter-spacing: 3px;
-  font-weight: 700;
-}
-.toggle-btn {
-  width: 2rem;
-  height: 2rem;
-  background: var(--white);
-  color: var(--primary-700);
-  border-radius: var(--borderRadius);
-  border-color: transparent;
-  transition: var(--transition);
-  cursor: pointer;
-}
-.toggle-btn:hover {
-  transform: scale(1.05);
-} */
-/* 
-
+/*
 ============= 
 Sidebar
 =============== 

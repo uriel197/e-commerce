@@ -21,8 +21,6 @@ const CreateProduct = () => {
 
   const handleCheckboxChange = (e) => {
     const { name, checked } = e.target;
-    console.log(checked);
-
     setFormData({ ...formData, [name]: checked });
   };
 
@@ -61,7 +59,7 @@ const CreateProduct = () => {
           image: imageUrl,
         },
       });
-      console.log(formData);
+      console.log("formData-image: ", formData.image);
 
       toast.success("Product created successfully!");
 
@@ -76,11 +74,8 @@ const CreateProduct = () => {
         image: null,
       });
     } catch (error) {
-      if (error.response && error.response.msg) {
-        toast.error(error.response.msg);
-      } else {
-        toast.error(error.message || "Network error occurred");
-      }
+      toast.error(error.message || "Network error occurred");
+      console.log("error: ", error.message, error.cause.status);
     }
   };
 

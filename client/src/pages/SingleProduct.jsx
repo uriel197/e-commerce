@@ -29,8 +29,6 @@ export const loader =
     );
 
     const { product } = response;
-    console.log("singleProd: ", product);
-
     return { product };
   };
 

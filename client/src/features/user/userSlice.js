@@ -6,17 +6,14 @@ const themes = {
   dracula: "dracula",
 };
 
-// const getUserFromLocalStorage = () => {
-//   return JSON.parse(localStorage.getItem("user")) || null;
-// };
-
 const getUserFromLocalStorage = () => {
   const userString = localStorage.getItem("user");
   return userString ? JSON.parse(userString) : null;
 };
 
 const getThemeFromLocalStorage = () => {
-  const theme = localStorage.getItem("theme") || themes.cupcake;
+  const user = getUserFromLocalStorage();
+  const theme = user?.theme || localStorage.getItem("theme") || themes.cupcake;
   document.documentElement.setAttribute("data-theme", theme);
   return theme;
 };
@@ -34,24 +31,36 @@ const userSlice = createSlice({
       const user = action.payload;
       if (user) {
         state.user = user;
+        state.theme = user.theme;
+        document.documentElement.setAttribute("data-theme", state.theme); // Apply theme to the page
         localStorage.setItem("user", JSON.stringify(user)); // Ensure this is setting correctly
+        localStorage.setItem("theme", user.theme);
       } else {
         console.error("User data is undefined or null");
         state.user = null;
+        state.theme = themes.cupcake; // Reset to default theme
+        document.documentElement.setAttribute("data-theme", themes.cupcake);
         localStorage.removeItem("user");
+        localStorage.setItem("theme", themes.cupcake);
       }
     },
 
     logoutUser: (state) => {
       state.user = null;
+      state.theme = "cupcake";
+      document.documentElement.setAttribute("data-theme", themes.cupcake);
       localStorage.removeItem("user");
-      toast.success("Logged out successfully");
+      localStorage.setItem("theme", themes.cupcake);
     },
     toggleTheme: (state) => {
       const { dracula, cupcake } = themes;
       state.theme = state.theme === dracula ? cupcake : dracula;
-      document.documentElement.setAttribute("data-theme", state.theme);
-      localStorage.setItem("theme", state.theme);
+      if (state.user) {
+        state.user.theme = state.theme; // Update user.theme in state
+        localStorage.setItem("user", JSON.stringify(state.user)); // Update user in localStorage
+        document.documentElement.setAttribute("data-theme", state.theme);
+        localStorage.setItem("theme", state.theme);
+      }
     },
   },
 });

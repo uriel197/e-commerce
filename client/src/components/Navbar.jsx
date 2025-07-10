@@ -3,18 +3,53 @@ import { FaBarsStaggered } from "react-icons/fa6";
 import { NavLink } from "react-router-dom";
 import { NavLinks, AdminNavLinks } from "../components";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleTheme } from "../features/user/userSlice";
+import { toggleTheme, logoutUser } from "../features/user/userSlice";
 import { useGlobalContext } from "../context/GlobalContext";
 import Sidebar from "./Sidebar";
+import { useCallback } from "react";
+import { debounce } from "lodash";
+import { toast } from "react-toastify";
 
 const Navbar = () => {
-  const { openSidebar, toggleButton } = useGlobalContext();
+  const { openSidebar } = useGlobalContext();
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.userState.user);
+  const { user, theme } = useSelector((state) => state.userState);
 
-  const handleTheme = () => {
-    dispatch(toggleTheme());
-  };
+  const handleTheme = useCallback(
+    debounce(async () => {
+      const newTheme = theme === "dracula" ? "cupcake" : "dracula";
+
+      dispatch(toggleTheme()); // Update local state and UI immediately
+      try {
+        const response = await fetch(
+          "http://localhost:5000/api/v1/users/updateUserTheme",
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ theme: newTheme }),
+            credentials: "include", // Ensure cookies are sent with the request
+          }
+        );
+        const data = await response.json();
+        if (response.ok) {
+          toast.success(`${data.msg}`);
+        } else {
+          if (response.status === 401) {
+            toast.error("Session expired. Please log in again.");
+            dispatch(logoutUser());
+          } else {
+            throw new Error("Failed to update theme");
+          }
+        }
+      } catch (error) {
+        console.error("Error updating theme:", error.message);
+        toast.error("Failed to save theme preference. Please try again.");
+      }
+    }, 500),
+    [theme, user, dispatch]
+  );
 
   const numItemsInCart = useSelector((state) => state.cartState.numItemsInCart);
 

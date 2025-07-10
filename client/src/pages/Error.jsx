@@ -2,7 +2,17 @@ import { useRouteError, Link } from "react-router-dom";
 
 const Error = () => {
   const error = useRouteError();
-  console.log(error);
+  console.log("Error:", error);
+
+  if (error.status === 400) {
+    return (
+      <main className="text-center">
+        <h4 className="font-bold text-4xl">Bad Request</h4>
+        <p>{error.data?.msg || "Invalid input. Go back and try again."}</p>
+        <Link to="/">Go Back Home</Link>
+      </main>
+    );
+  }
 
   if (error.status === 404) {
     return (
@@ -27,7 +37,17 @@ const Error = () => {
 
   return (
     <main className="grid min-h-[100vh] place-items-center px-8">
-      <h4 className="text-center font-bold text-4xl">there was an error...</h4>
+      <div className="text-center">
+        <h4 className="font-bold text-4xl">Something went wrong!</h4>
+        <p className="mt-4">
+          {error.data?.msg || "An unexpected error occurred."}
+        </p>
+        <div className="mt-10">
+          <Link to="/" className="btn btn-secondary">
+            Go back home
+          </Link>
+        </div>
+      </div>
     </main>
   );
 };

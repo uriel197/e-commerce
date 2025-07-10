@@ -6,8 +6,11 @@ export const customFetch = async (endpoint, options = {}) => {
 
     // If params are provided, append them to the URL
     if (options.params) {
+      /* 1 */
       Object.entries(options.params).forEach(([key, value]) => {
-        url.searchParams.append(key, value);
+        if (value !== undefined && value !== null) {
+          url.searchParams.append(key, value);
+        }
       });
       delete options.params; // Remove params from options to avoid conflicts
     }
@@ -29,18 +32,31 @@ export const customFetch = async (endpoint, options = {}) => {
       credentials: "include",
     });
 
+    // Check Content-Type to avoid parsing non-JSON
+    const contentType = response.headers.get("content-type");
     if (!response.ok) {
       // Parse and throw error for detailed handling
       const errorData = await response.json();
-      throw { response: errorData, status: response.status };
+      throw new Error(errorData.msg || "Request failed", {
+        cause: { status: response.status },
+      });
     }
 
-    return await response.json();
+    // Only parse JSON if Content-Type indicates JSON
+    if (contentType && contentType.includes("application/json")) {
+      return await response.json();
+    }
+    throw new Error("Unexpected response format", {
+      cause: { status: response.status },
+    });
   } catch (error) {
-    console.error("Fetch error:", error);
+    console.error("Fetch error:", error.message, {
+      status: error.cause?.status,
+    });
     throw error;
   }
 };
+
 export const queryFetch = async (endpoint, options = {}) => {
   const url = new URL(`${productionUrl}${endpoint}`);
   console.log("Fetching from network:", url);
@@ -78,3 +94,17 @@ export const generateAmountOptions = (number) => {
     );
   });
 };
+
+/*
+=======================================
+     COMMENTS - COMMENTS - COMMENTS
+=======================================
+*** 1: For each key-value pair, if the value is neither undefined nor null, it appends the key and value to the url.searchParams object using the append method. This adds the parameters to the query string of the URL which After processing, it removes the params property from the options object to avoid potential conflicts later in the code.
+
+ 
+
+
+
+
+
+*/

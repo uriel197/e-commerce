@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { clearCart } from "../features/cart/cartSlice";
 import { logoutUser } from "../features/user/userSlice";
+import { toast } from "react-toastify";
 //import { useQueryClient } from "@tanstack/react-query";
 
 const Header = () => {
@@ -11,9 +12,10 @@ const Header = () => {
   const user = useSelector((state) => state.userState.user);
 
   const handleLogout = () => {
-    navigate("/");
+    navigate("/login");
     dispatch(clearCart());
     dispatch(logoutUser());
+    toast.success("Logged out successfully");
     //queryClient.removeQueries();
   };
 

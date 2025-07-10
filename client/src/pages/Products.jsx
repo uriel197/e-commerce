@@ -51,6 +51,7 @@ export const loader =
     );
 
     const { products } = response;
+
     //   const meta = response.meta;
     return { products, params };
   };

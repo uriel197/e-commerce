@@ -1,5 +1,6 @@
 import { FormInput, SubmitBtn } from "../components";
-import { Form, Link, redirect } from "react-router-dom";
+import { Form, Link, redirect, useActionData } from "react-router-dom";
+import { useEffect } from "react";
 import { customFetch } from "../utils";
 import { toast } from "react-toastify";
 import { loginUser } from "../features/user/userSlice";
@@ -9,6 +10,12 @@ export const action =
   async ({ request }) => {
     const formData = await request.formData();
     const data = Object.fromEntries(formData);
+
+    // Validate required fields
+    if (!data.email || !data.password) {
+      toast.warning("you must fill out all fields");
+      return { message: "All fields are required" };
+    }
 
     try {
       const response = await customFetch("/auth/login", {
@@ -20,20 +27,29 @@ export const action =
         store.dispatch(loginUser(response.user)); // Assuming 'user' is directly in the response
       } else {
         console.error("User data not found in response:", response);
-        // Handle this scenario appropriately, maybe show an error message
+        throw new Error(response.msg || "login failed");
       }
       toast.success("logged in successfully");
       return redirect("/");
     } catch (error) {
-      const errorMessage =
-        error?.response?.data?.error?.message ||
-        "please double check your credentials";
+      console.error("error: ", error.message, {
+        status: error.cause?.status,
+      });
+      const errorMessage = error.message || "Unable to login";
       toast.error(errorMessage);
-      return null;
+      return { error: errorMessage };
     }
   };
 
 const Login = () => {
+  const actionData = useActionData();
+
+  useEffect(() => {
+    if (actionData?.error) {
+      toast.error(actionData.error);
+    }
+  }, [actionData]);
+
   return (
     <section className="h-screen grid place-items-center">
       <Form
@@ -47,9 +63,6 @@ const Login = () => {
         <div className="mt-4">
           <SubmitBtn text="login" />
         </div>
-        <button type="button" className="btn btn-secondary btn-block">
-          guest user
-        </button>
         <p className="text-center">
           Not a member yet?{" "}
           <Link

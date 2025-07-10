@@ -1,5 +1,3 @@
-import { customFetch } from "../utils";
-
 const UploadImage = async (file) => {
   if (!file) {
     throw new Error("Please select an image to upload.");
@@ -19,11 +17,10 @@ const UploadImage = async (file) => {
     );
 
     const data = await response.json();
-    console.log("response.json:", data.image);
 
-    // if (!response.image) {
-    //   throw new Error(response.msg || "Image upload failed");
-    // }
+    if (!data.image) {
+      throw new Error(response.msg || "Image upload failed");
+    }
 
     return data.image;
   } catch (error) {

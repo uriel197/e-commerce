@@ -30,7 +30,7 @@ export const loader =
     const user = store.getState().userState.user;
 
     if (!user) {
-      toast.error("You must logged in to view orders");
+      toast.error("You must be logged in to view orders");
       return redirect("/login");
     }
     const params = Object.fromEntries([
@@ -41,15 +41,13 @@ export const loader =
         params,
       });
       const orders = response.orders;
-      console.log("response from sever:", orders);
       return orders;
     } catch (error) {
       console.log(error);
       const errorMessage =
-        error?.response?.error?.message ||
-        "there was an error placing your order";
+        error.message || "there was an error placing your order";
       toast.error(errorMessage);
-      if (error?.response?.status === 401 || 403) return redirect("/login");
+      if (error.status === 401 || 403) return redirect("/login");
       return null;
     }
   };

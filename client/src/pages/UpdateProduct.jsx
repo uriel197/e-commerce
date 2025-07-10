@@ -152,7 +152,7 @@ const UpdateProduct = () => {
               name="shipping"
               type="checkbox"
               checked={formData.shipping}
-              label="shipping"
+              label="free shipping"
               size="checkbox-lg"
               onChange={handleCheckboxChange}
               defaultValue={formData.shipping}

@@ -2,30 +2,32 @@ import { FormInput, SubmitBtn } from "../components";
 import { Form, Link, redirect } from "react-router-dom";
 import { toast } from "react-toastify";
 import { customFetch } from "../utils";
-import { loginUser } from "../features/user/userSlice";
 
 export const action = async ({ request }) => {
   const formData = await request.formData();
   const data = Object.fromEntries(formData);
+
+  // Validate required fields
+  if (!data.name || !data.email || !data.password) {
+    toast.warning("you must fill out all fields");
+    return { message: "All fields are required" };
+  }
 
   try {
     const response = await customFetch("/auth/register", {
       method: "POST",
       body: data,
     });
-
-    if (response.user) {
-      store.dispatch(loginUser(response.user));
+    const fetchedData = await response.json();
+    if (fetchedData.user) {
+      toast.success("account created successfully");
     } else {
-      console.error("User data not found in response:", response);
-      // Handle this scenario appropriately, maybe show an error message
+      console.error("error: ", fetchedData);
+      throw new Error(response.msg || "Registration failed");
     }
-    toast.success("account created successfully");
-    return redirect("/");
+    return redirect("/login");
   } catch (error) {
-    const errorMessage =
-      error?.response?.data?.error?.message ||
-      "please double check your credentials";
+    const errorMessage = error.message || "Registration failed";
     toast.error(errorMessage);
     return null;
   }

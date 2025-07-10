@@ -1,7 +1,5 @@
-import { useState } from "react";
 import { useSelector } from "react-redux";
 import { FaTimes } from "react-icons/fa";
-import { sublinks } from "../data";
 import { useGlobalContext } from "../context/GlobalContext";
 import { SidebarSublinks, SidebarAdminSublinks } from "../components";
 

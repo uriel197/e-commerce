@@ -17,6 +17,7 @@ const OrdersList = () => {
           {/* head */}
           <thead>
             <tr>
+              <th>Order ID</th>
               <th>User ID</th>
               <th>Status</th>
               <th>Products</th>
@@ -27,12 +28,13 @@ const OrdersList = () => {
           <tbody>
             {orders.map((order) => {
               const id = order.id;
-              const { user, status, orderItems, total, createdAt } = order;
+              const { _id, user, status, orderItems, total, createdAt } = order;
               const orderTotal = formatPrice(total);
               const items = orderItems.length;
               const date = day(createdAt).format("hh:mm a - MMM Do, YYYY");
               return (
                 <tr key={id}>
+                  <td>{_id}</td>
                   <td>{user}</td>
                   <td>{status}</td>
                   <td>

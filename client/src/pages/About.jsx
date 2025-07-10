@@ -15,10 +15,9 @@ const About = () => {
       </div>
       <p className="mt-6 text-lg leading-8 max-w-2xl mx-auto">
         Welcome to Biush, our e-commerce platform, built with the MERN stack and
-        a lil help from Tailwind and daisyUI to bring clients a seamless
-        shopping experience. User authentication is a critical component in our
-        platform, ensuring that each user's experience is personalized, secure,
-        and smooth. Here's how we've approached it:
+        a lil help from Tailwind and daisyUI. User authentication is a critical
+        component in our platform, ensuring that each user's experience is
+        personalized, secure and smooth. Here's how we've approached it:
       </p>
       <p className="mt-6 text-lg leading-8 max-w-2xl mx-auto">
         <li>
@@ -26,12 +25,12 @@ const About = () => {
           exposure.
         </li>
         <li>
-          JWTs are stored in local storage or cookies, depending on security
-          settings, with expiration times to manage session durations.
+          JWTs are stored in cookies, with expiration times to manage session
+          durations.
         </li>
         <li>
           Beyond authentication, we've implemented role-based access control,
-          allowing different user roles (like "admin", "customer") to access
+          allowing different user roles (like "admin", "user") to access
           specific functionalities or data.
         </li>
         <li>

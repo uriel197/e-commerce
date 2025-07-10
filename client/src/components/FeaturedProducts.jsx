@@ -6,7 +6,6 @@ const FeaturedProducts = () => {
   const { products } = useLoaderData();
 
   // Log the data from useLoaderData to verify it’s served from cache
-  console.log("Data from loader (cached or network):", products);
 
   return (
     <>

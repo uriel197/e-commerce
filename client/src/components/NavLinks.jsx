@@ -1,5 +1,4 @@
 import { useSelector } from "react-redux";
-import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { sublinks } from "../data";
 import { useGlobalContext } from "../context/GlobalContext";
