@@ -10,6 +10,7 @@ const {
   updateUser,
   showCurrentUser,
   updateUserPassword,
+  updateUserTheme,
 } = require("../controllers/userController");
 
 router
@@ -21,6 +22,8 @@ router.route("/showMe").get(authenticateUser, showCurrentUser);
 router.route("/updateUser").patch(authenticateUser, updateUser);
 
 router.route("/updateUserPassword").patch(authenticateUser, updateUserPassword);
+
+router.route("/updateUserTheme").patch(authenticateUser, updateUserTheme);
 
 router.route("/:id").get(authenticateUser, getSingleUser);
 

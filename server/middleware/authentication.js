@@ -10,8 +10,8 @@ const authenticateUser = async (req, res, next) => {
   }
 
   try {
-    const { name, userId, email, role } = isTokenValid({ token });
-    req.user = { name, userId, role, email };
+    const { name, userId, email, role, theme } = isTokenValid({ token });
+    req.user = { name, userId, role, email, theme };
     next();
   } catch (error) {
     throw new CustomError.UnauthenticatedError("Authentication failed");

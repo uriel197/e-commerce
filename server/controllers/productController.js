@@ -89,7 +89,7 @@ const getAllProducts = async (req, res) => {
     queryObject.category = category;
   }
   if (name) {
-    queryObject.name = { $regex: name, $options: "i" };
+    queryObject.description = { $regex: name, $options: "i" };
   }
   if (shipping) {
     queryObject.freeShipping = true;
@@ -200,6 +200,7 @@ const uploadImage = async (req, res) => {
 
     return res.status(StatusCodes.OK).json({ image: fullUrl });
   } catch (error) {
+    /* 5 */
     return res
       .status(StatusCodes.BAD_REQUEST)
       .json({ msg: "Error uploading image", error: error.message });
@@ -256,5 +257,10 @@ How They Relate:
 formData.append("image", productImage): This code on the client-side adds the selected file to the FormData object under the key "image".
 req.files.image: This on the server-side accesses the file that was sent under the key "image".
 Essentially, the key "image" in formData.append("image", productImage) on the client side matches req.files.image on the server side, provided the middleware is set up to handle multipart/form-data requests and files.
+
+***5:  the catch block sends an alternative response with StatusCodes.BAD_REQUEST (400) and an error message when an error occurs during the image upload (e.g., file move fails). This ensures:Client Notification: The client receives a meaningful response indicating the upload failed, rather than the server crashing or hanging.
+Error Handling: It prevents the error from propagating to the global errorHandlerMiddleware, providing a specific response tailored to the upload failure instead of a generic one from the middleware.
+
+
 
 */

@@ -1,6 +1,5 @@
 const Order = require("../models/Order");
 const Product = require("../models/Product");
-
 const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
 const { checkPermissions } = require("../utils");
@@ -11,9 +10,8 @@ const fakeStripeAPI = async ({ amount, currency }) => {
 };
 
 const createOrder = async (req, res) => {
-  console.log("req.body:", req.body);
-
   const { cartItems, tax, shipping } = req.body;
+  console.log("req.body:", req.body);
 
   if (!cartItems || cartItems.length < 1) {
     throw new CustomError.BadRequestError("No cart items provided");

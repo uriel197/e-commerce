@@ -8,7 +8,6 @@ const {
 } = require("../utils");
 
 const getAllUsers = async (req, res) => {
-  console.log(req.user);
   const users = await User.find({ role: "user" }).select("-password");
   if (!users) {
     throw new CustomError.NotFoundError("No active users");
@@ -67,17 +66,40 @@ const updateUserPassword = async (req, res) => {
   res.status(StatusCodes.OK).json({ msg: "password was successfuly updated" });
 };
 
+const updateUserTheme = async (req, res) => {
+  const { theme } = req.body;
+  const { userId } = req.user;
+
+  // Validate theme
+  if (!["dracula", "cupcake"].includes(theme)) {
+    throw new CustomError.BadRequestError("Invalid theme value");
+  }
+
+  // Update the user’s theme in the database
+  const user = await User.findOne({ _id: userId });
+
+  if (!user) {
+    throw new CustomError.NotFoundError(`No user found with ID ${userId}`);
+  }
+  user.theme = theme;
+
+  await user.save();
+
+  res.status(200).json({ msg: "user preference has been updated" });
+};
+
 module.exports = {
   getAllUsers,
   getSingleUser,
   updateUser,
   showCurrentUser,
   updateUserPassword,
+  updateUserTheme,
 };
 
 /******************* COMMENTS *****************
 
-***1: In your code, the authenticateUser middleware function attaches the user information to the req object before passing it along to the next middleware or route handler. Specifically, it attaches the user information to req.user.
+***1: In our code, the authenticateUser middleware function attaches the user information to the req object before passing it along to the next middleware or route handler. Specifically, it attaches the user information to req.user.
 Here's the relevant part of your authenticateUser function:
 
 req.user = { name, userId, role };
